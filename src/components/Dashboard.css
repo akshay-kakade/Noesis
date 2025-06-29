@@ -1,0 +1,132 @@
+.dashboard-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.header-left h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.header-left p {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 12px;
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.user-icon {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.user-email {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.logout-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.dashboard-main {
+  flex: 1;
+  background: #f8fafc;
+}
+
+/* Override some App styles to work better in dashboard */
+.dashboard-main .app-container {
+  padding-top: 0;
+}
+
+.dashboard-main .app-header {
+  display: none; /* Hide the original header since we have dashboard header */
+}
+
+.dashboard-main .main-content {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+  
+  .header-right {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .user-info {
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+  }
+  
+  .dashboard-main .main-content {
+    padding: 16px;
+  }
+} 

@@ -1,11 +1,11 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 
-if (!import.meta.env.VITE_API_KEY) {
-  throw new Error("VITE_API_KEY is not defined. Please set it in your .env file");
+if (!import.meta.env.VITE_GEMINI_API_KEY) {
+  throw new Error("VITE_GEMINI_API_KEY is not defined. Please set it in your .env file");
 }
 
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_API_KEY });
+const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
 // --- Type Definitions ---
 interface TreeNodeData {
@@ -193,6 +193,26 @@ const Node: React.FC<{
     );
 };
 
+const BeautifulHeader: React.FC = () => (
+  <header className="beautiful-header">
+    <div className="header-content">
+      <span className="header-logo">🌳</span>
+      <div>
+        <h1 className="header-title">Noesis Knowledge Tree</h1>
+        <p className="header-tagline">Explore, Expand, and Visualize Knowledge</p>
+      </div>
+    </div>
+  </header>
+);
+
+const BeautifulFooter: React.FC = () => (
+  <footer className="beautiful-footer">
+    <div className="footer-content">
+      <span>© {new Date().getFullYear()} Noesis. All rights reserved.</span>
+      <a href="https://github.com/akshaysharma096/Noesis" target="_blank" rel="noopener noreferrer" className="footer-link">GitHub</a>
+    </div>
+  </footer>
+);
 
 const App: React.FC = () => {
     const [topic, setTopic] = useState<string>('Knowledge');
@@ -239,8 +259,8 @@ const App: React.FC = () => {
     }, [isPanning]);
 
 
-    const { nodes, edges, svgWidth, svgHeight } = useMemo(() => {
-        if (!treeData) return { nodes: [], edges: [], svgWidth: 0, svgHeight: 0 };
+    const { nodes, edges } = useMemo(() => {
+        if (!treeData) return { nodes: [], edges: [] };
 
         const allNodes: ProcessedNode[] = [];
         const allEdges: { source: ProcessedNode; target: ProcessedNode }[] = [];
@@ -292,9 +312,7 @@ const App: React.FC = () => {
 
         return {
             nodes: allNodes,
-            edges: allEdges,
-            svgWidth: (maxDepth + 2) * LEVEL_SPACING,
-            svgHeight: yCounter + PADDING + Math.abs(rootYOffset)
+            edges: allEdges
         };
     }, [treeData, viewTransform.k]);
 
@@ -306,6 +324,9 @@ const App: React.FC = () => {
                 contents: prompt,
                 config: { systemInstruction: getSystemInstruction(), responseMimeType: "application/json" },
             });
+            if (!response.text) {
+                throw new Error('No response text received from AI');
+            }
             return parseJsonFromText(response.text);
         } catch (e) {
             console.error(e);
@@ -390,17 +411,14 @@ const App: React.FC = () => {
     };
 
     return (
-        <div className="app-container">
+        <div className="app-outer-container">
+          <BeautifulHeader />
+          <div className="app-container">
             <div className="main-content">
-                <header className="app-header">
-                    <h1>Interactive Knowledge Tree</h1>
-                    <p>Hover on nodes for details. Click to select & expand. Long-press and drag background to pan.</p>
-                </header>
                 <form onSubmit={handleInitialGenerate} className="input-form">
                     <input type="text" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="e.g., Artificial Intelligence..." aria-label="Topic Input" />
                     <button type="submit" disabled={isLoading}>{isLoading ? 'Generating...' : 'Generate'}</button>
                 </form>
-
                 <div className="tree-visualization-container" ref={visContainerRef} onWheel={handleWheel}>
                     {isLoading && <div className="global-spinner"><div className="spinner"></div><p>Generating knowledge tree...</p></div>}
                     {error && <div className="error-message"><strong>Error:</strong> {error}</div>}
@@ -430,6 +448,8 @@ const App: React.FC = () => {
                 </div>
             </div>
             <Sidebar hoveredNode={hoveredNode} selectedNode={selectedNode} />
+          </div>
+          <BeautifulFooter />
         </div>
     );
 };
