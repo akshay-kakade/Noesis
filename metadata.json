@@ -1,0 +1,4 @@
+{
+  "name": "Knowledge Tree Generator",
+  "description": "An interactive app that generates a hierarchical knowledge tree for any given topic using the Gemini API."
+}
